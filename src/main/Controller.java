@@ -71,21 +71,20 @@ public class Controller {
             }
 
             if(tipo_operacao_box.getValue() == tipo_operacao.get(0)){
-                System.out.println("sou 0");
+                estadosFromXml.forEach(estado -> {
+                    if (estado.isStatusFinal() == true) {
+                        estado.setStatusFinal(false);
+                    } else {
+                        estado.setStatusFinal(true);
+                    }
+                });
             }else{
-                System.out.println("sou 1");
+                //todo implementar Estrela
             }
-            estadosFromXml.forEach(estado -> {
-                if (estado.isStatusFinal() == true) {
-                    estado.setStatusFinal(false);
-                } else {
-                    estado.setStatusFinal(true);
-                }
-            });
+
 
             //gerando automato que vai ser exportado
             Automato automato = new Automato();
-
 
             automato.lista_de_estados = estadosFromXml;
             displayAutomato(automato);
