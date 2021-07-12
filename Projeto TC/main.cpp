@@ -269,10 +269,10 @@ return c;
 int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tags_inicio_e_fim tagss, int c, Transa *transa, tag_nome_id *lambidas, int &quant_finais, int op, coordenadas *coord){
     ofstream arq;
     if(op == 1){
-        nome_automoto += "Complemento.jff";
+        nome_automoto = "Complemento.jff";
     }
     else if(op == 2){
-        nome_automoto += "Estrela.jff";
+        nome_automoto = "Estrela.jff";
     }
     else
         return 0;
@@ -290,8 +290,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     //Passa os estados para o arquivo
     for(int i = 0; i<c; i++){
          arq << nome[i].id;
-         arq << "\n\t\t\t<x>"+coord[i].rotax+"</x>&#13;";
-         arq << "\n\t\t\t<y>"+coord[i].rotay+"</y>&#13;";
+         arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
+         arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
          if(nome[i].cond != "\t\t</state>&#13;")
             arq << nome[i].cond + "\n";
          else
