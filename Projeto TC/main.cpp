@@ -17,19 +17,23 @@ struct tags_inicio_e_fim{
     string fim_2 = "\n\t</automaton>&#13;";
     string fim_3 = "\n</structure>";
 };
-//Guarda o tipo dos estados e é definido de acordo com a bandeira de cada um, onde a bandeira está salva na struct Estados
+struct coordenadas{
+    string rotax;
+    string rotay;
+};
+//Guarda o tipo dos estados e ï¿½ definido de acordo com a bandeira de cada um, onde a bandeira estï¿½ salva na struct Estados
 struct tags_estados{
     string inicial = "\n\t\t\t<initial/>&#13;";
     string finall = "\n\t\t\t<final/>&#13;";
     string transa = "\t\t<transition>&#13;";
 };
-//Guarda as transições e estados já montadas a partir das structs que vieram do pegaEstados
+//Guarda as transiï¿½ï¿½es e estados jï¿½ montadas a partir das structs que vieram do pegaEstados
 struct tag_nome_id{
     string id;
     string cond;
     string transition = "\t\t</state>&#13;";
 };
-//Guarda todas as transições vindas do automoto do usuário
+//Guarda todas as transiï¿½ï¿½es vindas do automoto do usuï¿½rio
 struct Transa{
     char id[1];
     char to[1];
@@ -37,7 +41,7 @@ struct Transa{
     int quant;
     int readQuant;
 };
-//Guarda todos os estados vindo do automoto do usuário
+//Guarda todos os estados vindo do automoto do usuï¿½rio
 struct Estados {
     char id[1];
     char nome[1];
@@ -48,12 +52,13 @@ struct id_Finais{
     char id[1];
 };
 
-// A função pegaEstados ela separa e guarda todos os estados e todas as transições
-int pegaEstados(string diretorio, Estados *estado, Transa *transa){
+// A funï¿½ï¿½o pegaEstados ela separa e guarda todos os estados e todas as transiï¿½ï¿½es
+int pegaEstados(string diretorio, Estados *estado, Transa *transa, coordenadas *coord){
     int tam = diretorio.length();
     char drt[tam +1];
     int c = 0;
     int flag = 0;
+    int aux;
     transa->quant = 0;
     transa->readQuant = 0;
     string qualquer = "";
@@ -76,6 +81,18 @@ int pegaEstados(string diretorio, Estados *estado, Transa *transa){
 
     //Pega o ID dos estados
     for(int i = 175; i<=qualquer.length(); i++){
+        if(qualquer[i] == '<' && qualquer[i+1] == 'x' && qualquer[i+2] == '>'){
+            aux = i+2;
+            while(qualquer[++aux] != '.'){
+                coord[c].rotax += qualquer[aux];
+            }
+        }
+        else if(qualquer[i] == '<' && qualquer[i+1] == 'y' && qualquer[i+2] == '>'){
+            aux = i+2;
+            while(qualquer[++aux] != '.'){
+                coord[c].rotay += qualquer[aux];
+            }
+        }
         //Pega os estados somente inicias
         if(qualquer[i] == 'i' && qualquer[i+1] == 'd' && qualquer[i+2] == '=' && qualquer[i+3] == '"'){
             estado[c].id[1] = qualquer[i+4];
@@ -94,11 +111,11 @@ int pegaEstados(string diretorio, Estados *estado, Transa *transa){
         else if(qualquer[i] == 'f' && qualquer[i+1] == 'i' && qualquer[i+2] == 'n' && flag != 2){
             estado[c-1].bandeira = 2;
         }
-        //Pega ids das transições
+        //Pega ids das transiï¿½ï¿½es
         if(qualquer[i] == '<' && qualquer[i+1] == 'f' && qualquer[i+2] == 'r' && qualquer[i+3] == 'o'){
             transa[transa->quant].id[1] = qualquer[i+6];
             transa[transa->quant].to[1] = qualquer[i+27];
-            transa[transa->quant].read[1] = qualquer[i+48]; //Provavelmente o erro está aqui todo
+            transa[transa->quant].read[1] = qualquer[i+48]; //Provavelmente o erro estï¿½ aqui todo
             transa->quant++;
         }
     }
@@ -112,7 +129,7 @@ int pegaEstados(string diretorio, Estados *estado, Transa *transa){
     return c;
 
 }
-//A função criaComplemento cria as estruturas para o complemento a partir da função pegaEstados
+//A funï¿½ï¿½o criaComplemento cria as estruturas para o complemento a partir da funï¿½ï¿½o pegaEstados
 int criaComplemento(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f_t, Transa *transa, tag_nome_id *trans){
     //Cria os estados
     for(int i = 0; i<c; i++){
@@ -134,7 +151,7 @@ int criaComplemento(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f
         }
     }
 
-    //Cria as transições
+    //Cria as transiï¿½ï¿½es
     for(int i = 0; i<transa->quant; i++){
         trans[i].id = "\n\t\t<transition>&#13;\n";
         trans[i].id += "\t\t\t<from>";
@@ -143,7 +160,7 @@ int criaComplemento(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f
         trans[i].id += "\t\t\t<to>";
         trans[i].id += transa[i].to[1];
         trans[i].id += "</to>&#13;\n";
-        if(transa[i].read[1] == '>'){ //Provavelmente o erro está aqui todo
+        if(transa[i].read[1] == '>'){ //Provavelmente o erro estï¿½ aqui todo
             trans[i].id += "\t\t\t<read/>&#13;\n";
         }
         else{
@@ -155,11 +172,11 @@ int criaComplemento(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f
     }
     return c;
 }
-//A função criaEstrela cria as estruturas para a estrela a partir da função pegaEstados
+//A funï¿½ï¿½o criaEstrela cria as estruturas para a estrela a partir da funï¿½ï¿½o pegaEstados
 int criaEstrela(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f_t, Transa *transa, tag_nome_id *trans, id_Finais *finais, tag_nome_id *lambidas, int &quant_finais){
-    char alfa[1]; // Guarda o ID do estado inicial para a transições lambidas irem
-    string omega; // Guarda o ID seguinte ao último ID existente no automoto, para ser o novo ID inicial
-    omega = std::to_string(c); //Converte o c para ser o último ID //RedWarning pode acontecer aqui, normal
+    char alfa[1]; // Guarda o ID do estado inicial para a transiï¿½ï¿½es lambidas irem
+    string omega; // Guarda o ID seguinte ao ï¿½ltimo ID existente no automoto, para ser o novo ID inicial
+    omega = std::to_string(c); //Converte o c para ser o ï¿½ltimo ID //RedWarning pode acontecer aqui, normal
     c += 1;
     //Cria os estados
     for(int i = 0; i<c; i++){
@@ -200,7 +217,7 @@ int criaEstrela(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f_t, 
             quant_finais++;
         }
     }
-    //Cria as transições
+    //Cria as transiï¿½ï¿½es
     for(int i = 0; i<transa->quant; i++){
         trans[i].id = "\n\t\t<transition>&#13;\n";
         trans[i].id += "\t\t\t<from>";
@@ -220,19 +237,19 @@ int criaEstrela(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f_t, 
             trans[i].id += transa[i].to[1];
         }
         trans[i].id += "</to>&#13;\n";
-        //Transição lambida
+        //Transiï¿½ï¿½o lambida
         if(transa[i].read[1] == '>'){
             trans[i].id += "\t\t\t<read/>&#13;\n";
         }
         else{
             trans[i].id += "\t\t\t<read>";
-            trans[i].id += transa[i].read[1]; //Provavelmente o erro está aqui todo
+            trans[i].id += transa[i].read[1]; //Provavelmente o erro estï¿½ aqui todo
             trans[i].id += "</read>&#13;\n";
         }
         trans[i].id += "\t\t</transition>&#13;";
     }
 
-    //Cria as transições lambidas
+    //Cria as transiï¿½ï¿½es lambidas
     for(int i = 0; i<quant_finais; i++){
         lambidas[i].id = "\n\t\t<transition>&#13;\n";
         lambidas[i].id += "\t\t\t<from>";
@@ -241,15 +258,15 @@ int criaEstrela(Estados *estado, int c, tag_nome_id *nome, tags_estados *i_f_t, 
         lambidas[i].id += "\t\t\t<to>";
         lambidas[i].id += alfa[1];
         lambidas[i].id += "</to>&#13;\n";
-        //Transição lambida
+        //Transiï¿½ï¿½o lambida
         lambidas[i].id += "\t\t\t<read/>&#13;\n";
         lambidas[i].id += "\t\t</transition>&#13;";
     }
 
 return c;
 }
-//A função criaAutomoto salva e cria o automoto propriamento dito, nos padrões do .jff
-int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tags_inicio_e_fim tagss, int c, Transa *transa, tag_nome_id *lambidas, int &quant_finais, int op){
+//A funï¿½ï¿½o criaAutomoto salva e cria o automoto propriamento dito, nos padrï¿½es do .jff
+int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tags_inicio_e_fim tagss, int c, Transa *transa, tag_nome_id *lambidas, int &quant_finais, int op, coordenadas *coord){
     ofstream arq;
     if(op == 1){
         nome_automoto += "Complemento.jff";
@@ -273,8 +290,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     //Passa os estados para o arquivo
     for(int i = 0; i<c; i++){
          arq << nome[i].id;
-         arq << tagss.rotaX;
-         arq << tagss.rotaY;
+         arq << "\n\t\t\t<x>"+coord[i].rotax+"</x>&#13;";
+         arq << "\n\t\t\t<y>"+coord[i].rotay+"</y>&#13;";
          if(nome[i].cond != "\t\t</state>&#13;")
             arq << nome[i].cond + "\n";
          else
@@ -286,14 +303,14 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     }
 
     arq << tagss.meio;
-    //Passa as transições pro arquivo
+    //Passa as transiï¿½ï¿½es pro arquivo
     if(op == 2)
         transa->quant += 1;
     for(int i = 0; i<transa->quant; i++){
         arq << trans[i].id;
 
     }
-    //Passa as transições lambidas pro arquivo
+    //Passa as transiï¿½ï¿½es lambidas pro arquivo
     for(int i = 0; i<quant_finais; i++){
         arq << lambidas[i].id;
 
@@ -311,18 +328,19 @@ return 0;}
 int main()
 {
 
-    Estados estado[100]; // estado guarda todos os estados e ids vindos do automoto do usuário
-    Transa transa[100]; // transa é diferente de trans, onde Transa guarda as transições que vieram do automoto do usuário
+    Estados estado[100]; // estado guarda todos os estados e ids vindos do automoto do usuï¿½rio
+    Transa transa[100]; // transa ï¿½ diferente de trans, onde Transa guarda as transiï¿½ï¿½es que vieram do automoto do usuï¿½rio
     id_Finais finais[100]; // finais guarda todos os ids finais do aumoto
-    tags_inicio_e_fim textos; // Aqui, está guardado os primeiros e últimos textos do .txt do jff
+    tags_inicio_e_fim textos; // Aqui, estï¿½ guardado os primeiros e ï¿½ltimos textos do .txt do jff
     tags_estados textos_estados;
-    tag_nome_id nome[100]; // nome guarda a linha da sequência do id e do nome do id
-    tag_nome_id trans[100]; // trans guarda as transições que não são lambidas
-    tag_nome_id lambidas[100]; //Tag nome id lambidas guarda as transições lambidas, os ids e suas condições
-    tags_estados i_f_d[100]; //Tag estados guarda o tipo do estado, se é final, inicial, ou nenhum dos dois
+    tag_nome_id nome[100]; // nome guarda a linha da sequï¿½ncia do id e do nome do id
+    tag_nome_id trans[100]; // trans guarda as transiï¿½ï¿½es que nï¿½o sï¿½o lambidas
+    tag_nome_id lambidas[100]; //Tag nome id lambidas guarda as transiï¿½ï¿½es lambidas, os ids e suas condiï¿½ï¿½es
+    tags_estados i_f_d[100]; //Tag estados guarda o tipo do estado, se ï¿½ final, inicial, ou nenhum dos dois
+    coordenadas coord[100];
     int quant_finais = 0; // Quantidade de estados finais
-    int c; // c é quantidade de estados do automoto escolhido pelo usuário no total
-    int op; // Escolha do usuário, 1 para complemento e 2 para estrela
+    int c; // c ï¿½ quantidade de estados do automoto escolhido pelo usuï¿½rio no total
+    int op; // Escolha do usuï¿½rio, 1 para complemento e 2 para estrela
     string nome_arquivo, formato, diret;
 
     while(op != 4){
@@ -340,17 +358,17 @@ int main()
         fflush(stdin);
         diret = nome_arquivo + ".jff";
         if(op == 1){
-            c = criaComplemento(estado,pegaEstados(diret,estado,transa),nome,i_f_d,transa,trans);
+            c = criaComplemento(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans);
         }
         if(op == 2){
-            c = criaEstrela(estado,pegaEstados(diret,estado,transa),nome,i_f_d,transa,trans, finais, lambidas, quant_finais);
+            c = criaEstrela(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans, finais, lambidas, quant_finais);
         }
         if(op == 1 || op == 2){
-            criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op);
+            criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op, coord);
         }
         else
             cout << "Comando invalido" << endl;
-        system("cls");
+        //system("cls");
     }
     return 0;
 }
