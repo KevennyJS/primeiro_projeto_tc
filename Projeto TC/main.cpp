@@ -343,7 +343,7 @@ int main()
     int op; // Escolha do usu�rio, 1 para complemento e 2 para estrela
     string nome_arquivo, formato, diret;
 
-    while(op != 4){
+    while(op != 5){
         cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
         if(op == 3){
             cout << "Digite exatamente o nome do arquivo: ";
@@ -353,7 +353,8 @@ int main()
         cout << "1 - Complemento" << endl;
         cout << "2 - Estrela" << endl;
         cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
-        cout << "4 - Fechar programa" << endl;
+        cout << "4 - Abrir arquivo" << endl;
+        cout << "5 - Fechar programa" << endl;
         cin >> op;
         fflush(stdin);
         diret = nome_arquivo + ".jff";
@@ -365,6 +366,10 @@ int main()
         }
         if(op == 1 || op == 2){
             criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op, coord);
+            if(op == 1)
+                system("complem.bat");
+            else if(op == 2)
+                system("estrel.bat");
         }
         else
             cout << "Comando invalido" << endl;
