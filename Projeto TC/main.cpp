@@ -277,6 +277,7 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     else
         return 0;
     int tam = nome_automoto.length();
+    int cont = 0;
     char drt[tam +1];
     strcpy(drt, nome_automoto.c_str());
     arq.open(drt);
@@ -289,16 +290,26 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     arq << "\n";
     //Passa os estados para o arquivo
     for(int i = 0; i<c; i++){
-         arq << nome[i].id;
-         arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
-         arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
-         if(nome[i].cond != "\t\t</state>&#13;")
+        arq << nome[i].id;
+        if(op == 1){
+            arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
+            arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+        } else if(op == 2){
+            if(++cont == c){
+                arq << "\n\t\t\t<x>0</x>&#13;";
+                arq << "\n\t\t\t<y>0</y>&#13;";
+            }else{
+                arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
+                arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+            }
+        }
+        if(nome[i].cond != "\t\t</state>&#13;")
             arq << nome[i].cond + "\n";
-         else
+        else
             arq << "\n" + nome[i].cond + "\n";
-         if(i + 1 == c)
+        if(i + 1 == c)
             arq << nome[i].transition;
-         else
+        else
             arq << nome[i].transition + "\n";
     }
 
@@ -371,9 +382,9 @@ int main()
             else if(op == 2)
                 system("estrel.bat");
         }
-        else
+        if(op > 5 || op < 0)
             cout << "Comando invalido" << endl;
-        //system("cls");
+        system("cls");
     }
     return 0;
 }
