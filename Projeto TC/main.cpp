@@ -398,16 +398,9 @@ int main()
         diret = nome_arquivo + ".jff";
         if(op == 1){
             c = criaComplemento(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans);
-            for (int i = 0; i < count; i++)
-            for(int i = 0 ; i < 100; i++){
-                coord[i]=ccoordenadas();
-            }
         }
         if(op == 2){
             c = criaEstrela(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans, finais, lambidas, quant_finais);
-            for(int i = 0 ; i < 100; i++){
-                coord[i]="";
-            }
         }
         if(op == 1 || op == 2){
             criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op, coord);
@@ -415,11 +408,14 @@ int main()
                 system("complem.bat");
             else if(op == 2)
                 system("estrel.bat");
-            inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
+            for(int i = 0 ; i < 100; i++){
+                coord[i]=coordenadas();
+            }
+            //inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
         }
         if(op > 5 || op < 0)
             cout << "Comando invalido" << endl;
-        // system("cls");
+        system("cls");
     }
     return 0;
 }
