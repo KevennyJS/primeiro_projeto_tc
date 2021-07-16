@@ -45,7 +45,7 @@ struct Transa{
 struct Estados {
     char id[1];
     char nome[1];
-    int bandeira; // 1 = Estado inicial !! 2 = Estado final !! 3 = Estado inicial e final !! 0 = Estado comum
+    int bandeira = 0; // 1 = Estado inicial !! 2 = Estado final !! 3 = Estado inicial e final !! 0 = Estado comum
 };
 //Id_Finais guarda o id final para ser utilizando na estrela
 struct id_Finais{
@@ -85,12 +85,14 @@ int pegaEstados(string diretorio, Estados *estado, Transa *transa, coordenadas *
             aux = i+2;
             while(qualquer[++aux] != '.'){
                 coord[c].rotax += qualquer[aux];
+                // coord[c].rotax = "0";
             }
         }
         else if(qualquer[i] == '<' && qualquer[i+1] == 'y' && qualquer[i+2] == '>'){
             aux = i+2;
             while(qualquer[++aux] != '.'){
                 coord[c].rotay += qualquer[aux];
+                // coord[c].rotay = "0";
             }
         }
         //Pega os estados somente inicias
@@ -294,6 +296,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
         if(op == 1){
             arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
             arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+            cout << "X: " << coord[i+1].rotax << endl; 
+            cout << "Y: " << coord[i+1].rotay << endl; 
         } else if(op == 2){
             if(++cont == c){
                 arq << "\n\t\t\t<x>0</x>&#13;";
@@ -301,6 +305,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
             }else{
                 arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
                 arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+                cout << "X: " << coord[i+1].rotax << endl; 
+                cout << "Y: " << coord[i+1].rotay << endl; 
             }
         }
         if(nome[i].cond != "\t\t</state>&#13;")
@@ -355,6 +361,7 @@ int main()
     string nome_arquivo, formato, diret;
 
     while(op != 5){
+        cout<< "Smart Au-tomate: Gerador de complemento e estrela"<<endl;
         cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
         if(op == 3){
             cout << "Digite exatamente o nome do arquivo: ";
@@ -366,6 +373,7 @@ int main()
         cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
         cout << "4 - Abrir arquivo" << endl;
         cout << "5 - Fechar programa" << endl;
+        cout << "Escolha: ";
         cin >> op;
         fflush(stdin);
         diret = nome_arquivo + ".jff";
@@ -381,6 +389,20 @@ int main()
                 system("complem.bat");
             else if(op == 2)
                 system("estrel.bat");
+            for(int i = 0 ; i < 100; i++){
+                coord[i] = coordenadas();
+                estado[i] = Estados();
+                transa[i] = Transa();
+                trans[i] = tag_nome_id();
+                lambidas[i] = tag_nome_id();
+                nome[i] = tag_nome_id();
+                i_f_d[i] = tags_estados();
+                finais[i] = id_Finais();
+            }
+            textos = tags_inicio_e_fim();
+            textos_estados = tags_estados();
+            quant_finais = 0;
+            //inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
         }
         if(op > 5 || op < 0)
             cout << "Comando invalido" << endl;
