@@ -1,0 +1,3 @@
+F:/primeiro_projeto_tc/Projeto TC/cmake-build-debug/CMakeFiles/edit_cache.dir
+F:/primeiro_projeto_tc/Projeto TC/cmake-build-debug/CMakeFiles/Projeto_TC.dir
+F:/primeiro_projeto_tc/Projeto TC/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -45,7 +45,7 @@ struct Transa{
 struct Estados {
     char id[1];
     char nome[1];
-    int bandeira; // 1 = Estado inicial !! 2 = Estado final !! 3 = Estado inicial e final !! 0 = Estado comum
+    int bandeira = 0; // 1 = Estado inicial !! 2 = Estado final !! 3 = Estado inicial e final !! 0 = Estado comum
 };
 //Id_Finais guarda o id final para ser utilizando na estrela
 struct id_Finais{
@@ -342,25 +342,6 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
 
 return 0;}
 
-void inicial(Estados *estado, Transa *transa, id_Finais *finais, tag_nome_id *nome, tag_nome_id *trans, tag_nome_id *lambidas, tags_estados *i_f_d, coordenadas *coord){
-    Estados newEstado[100];
-    estado = newEstado;
-    Transa newtransa[100];
-    transa = newtransa;
-    id_Finais newfinais[100];
-    finais = newfinais;
-    tag_nome_id newnome[100];
-    nome = newnome;
-    tag_nome_id newtrans[100];
-    trans = newtrans;
-    tag_nome_id newlambidas[100];
-    lambidas = newlambidas;
-    tags_estados newi_f_d[100];
-    i_f_d = newi_f_d;
-    coordenadas newcoord[100];
-    coord = newcoord;
-}
-
 int main()
 {
 
@@ -409,8 +390,18 @@ int main()
             else if(op == 2)
                 system("estrel.bat");
             for(int i = 0 ; i < 100; i++){
-                coord[i]=coordenadas();
+                coord[i] = coordenadas();
+                estado[i] = Estados();
+                transa[i] = Transa();
+                trans[i] = tag_nome_id();
+                lambidas[i] = tag_nome_id();
+                nome[i] = tag_nome_id();
+                i_f_d[i] = tags_estados();
+                finais[i] = id_Finais();
             }
+            textos = tags_inicio_e_fim();
+            textos_estados = tags_estados();
+            quant_finais = 0;
             //inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
         }
         if(op > 5 || op < 0)
