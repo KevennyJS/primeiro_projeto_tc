@@ -85,12 +85,14 @@ int pegaEstados(string diretorio, Estados *estado, Transa *transa, coordenadas *
             aux = i+2;
             while(qualquer[++aux] != '.'){
                 coord[c].rotax += qualquer[aux];
+                // coord[c].rotax = "0";
             }
         }
         else if(qualquer[i] == '<' && qualquer[i+1] == 'y' && qualquer[i+2] == '>'){
             aux = i+2;
             while(qualquer[++aux] != '.'){
                 coord[c].rotay += qualquer[aux];
+                // coord[c].rotay = "0";
             }
         }
         //Pega os estados somente inicias
@@ -294,6 +296,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
         if(op == 1){
             arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
             arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+            cout << "X: " << coord[i+1].rotax << endl; 
+            cout << "Y: " << coord[i+1].rotay << endl; 
         } else if(op == 2){
             if(++cont == c){
                 arq << "\n\t\t\t<x>0</x>&#13;";
@@ -301,6 +305,8 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
             }else{
                 arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
                 arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
+                cout << "X: " << coord[i+1].rotax << endl; 
+                cout << "Y: " << coord[i+1].rotay << endl; 
             }
         }
         if(nome[i].cond != "\t\t</state>&#13;")
@@ -336,6 +342,25 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
 
 return 0;}
 
+void inicial(Estados *estado, Transa *transa, id_Finais *finais, tag_nome_id *nome, tag_nome_id *trans, tag_nome_id *lambidas, tags_estados *i_f_d, coordenadas *coord){
+    Estados newEstado[100];
+    estado = newEstado;
+    Transa newtransa[100];
+    transa = newtransa;
+    id_Finais newfinais[100];
+    finais = newfinais;
+    tag_nome_id newnome[100];
+    nome = newnome;
+    tag_nome_id newtrans[100];
+    trans = newtrans;
+    tag_nome_id newlambidas[100];
+    lambidas = newlambidas;
+    tags_estados newi_f_d[100];
+    i_f_d = newi_f_d;
+    coordenadas newcoord[100];
+    coord = newcoord;
+}
+
 int main()
 {
 
@@ -355,6 +380,7 @@ int main()
     string nome_arquivo, formato, diret;
 
     while(op != 5){
+        cout<< "Smart Au-tomate: Gerador de complemento e estrela"<<endl;
         cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
         if(op == 3){
             cout << "Digite exatamente o nome do arquivo: ";
@@ -366,14 +392,22 @@ int main()
         cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
         cout << "4 - Abrir arquivo" << endl;
         cout << "5 - Fechar programa" << endl;
+        cout << "Escolha: ";
         cin >> op;
         fflush(stdin);
         diret = nome_arquivo + ".jff";
         if(op == 1){
             c = criaComplemento(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans);
+            for (int i = 0; i < count; i++)
+            for(int i = 0 ; i < 100; i++){
+                coord[i]=ccoordenadas();
+            }
         }
         if(op == 2){
             c = criaEstrela(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans, finais, lambidas, quant_finais);
+            for(int i = 0 ; i < 100; i++){
+                coord[i]="";
+            }
         }
         if(op == 1 || op == 2){
             criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op, coord);
@@ -381,10 +415,11 @@ int main()
                 system("complem.bat");
             else if(op == 2)
                 system("estrel.bat");
+            inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
         }
         if(op > 5 || op < 0)
             cout << "Comando invalido" << endl;
-        system("cls");
+        // system("cls");
     }
     return 0;
 }
