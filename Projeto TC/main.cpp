@@ -270,10 +270,10 @@ return c;
 //A fun��o criaAutomoto salva e cria o automoto propriamento dito, nos padr�es do .jff
 int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tags_inicio_e_fim tagss, int c, Transa *transa, tag_nome_id *lambidas, int &quant_finais, int op, coordenadas *coord){
     ofstream arq;
-    if(op == 1){
+    if(op == 2){
         nome_automoto = "Complemento.jff";
     }
-    else if(op == 2){
+    else if(op == 3){
         nome_automoto = "Estrela.jff";
     }
     else
@@ -293,7 +293,7 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
     //Passa os estados para o arquivo
     for(int i = 0; i<c; i++){
         arq << nome[i].id;
-        if(op == 1){
+        if(op == 2){
             arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
             arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
             cout << "X: " << coord[i+1].rotax << endl; 
@@ -321,7 +321,7 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
 
     arq << tagss.meio;
     //Passa as transi��es pro arquivo
-    if(op == 2)
+    if(op == 3)
         transa->quant += 1;
     for(int i = 0; i<transa->quant; i++){
         arq << trans[i].id;
@@ -342,9 +342,37 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
 
 return 0;}
 
+void menu(string nome_arquivo){
+    cout<< "Smart Au-tomate: Gerador de complemento e estrela"<<endl;
+    cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
+        
+
+    cout << "1 - Complemento" << endl;
+    cout << "2 - Estrela" << endl;
+    cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
+    cout << "4 - Abrir arquivo" << endl;
+    cout << "5 - Fechar programa" << endl;
+    cout << "Escolha: ";
+}
+
+void printTomate(){
+    cout<< "  ____    __  __      _      ____    _____ "<< endl;
+    cout<< " / ___|  |  \/  |    / \    |  _ \  |_   _|"<< endl;
+    cout<< " \___ \  | |\/| |   / _ \   | |_) |   | |  "<< endl;
+    cout<< "  ___) | | |  | |  / ___ \  |  _ <    | |  "<< endl;
+    cout<< " |____/  |_|  |_| /_/   \_\ |_| \_\   |_|  "<< endl;
+    cout<< "     _      _   _           _____    ___    __  __      _      _____   _____ "<< endl;
+    cout<< "    / \    | | | |         |_   _|  / _ \  |  \/  |    / \    |_   _| | ____|"<< endl;
+    cout<< "   / _ \   | | | |  _____    | |   | | | | | |\/| |   / _ \     | |   |  _|  "<< endl;
+    cout<< "  / ___ \  | |_| | |_____|   | |   | |_| | | |  | |  / ___ \    | |   | |___ "<< endl;
+    cout<< " /_/   \_\  \___/            |_|    \___/  |_|  |_| /_/   \_\   |_|   |_____|"<< endl; 
+    sleep(1000);
+    system("cls");                                                                            
+}
+
 int main()
 {
-
+    system("color 0E");
     Estados estado[100]; // estado guarda todos os estados e ids vindos do automoto do usu�rio
     Transa transa[100]; // transa � diferente de trans, onde Transa guarda as transi��es que vieram do automoto do usu�rio
     id_Finais finais[100]; // finais guarda todos os ids finais do aumoto
@@ -360,34 +388,29 @@ int main()
     int op; // Escolha do usu�rio, 1 para complemento e 2 para estrela
     string nome_arquivo, formato, diret;
 
-    while(op != 5){
-        cout<< "Smart Au-tomate: Gerador de complemento e estrela"<<endl;
-        cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
-        if(op == 3){
-            cout << "Digite exatamente o nome do arquivo: ";
-            getline( cin, nome_arquivo);
-        }
+    printTomate();
 
-        cout << "1 - Complemento" << endl;
-        cout << "2 - Estrela" << endl;
-        cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
-        cout << "4 - Abrir arquivo" << endl;
-        cout << "5 - Fechar programa" << endl;
-        cout << "Escolha: ";
+    while(op != 5){
+        menu(nome_arquivo);
         cin >> op;
         fflush(stdin);
         diret = nome_arquivo + ".jff";
+
         if(op == 1){
-            c = criaComplemento(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans);
+            cout << "Digite exatamente o nome do arquivo: ";
+            getline( cin, nome_arquivo);
         }
         if(op == 2){
+            c = criaComplemento(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans);
+        }
+        if(op == 3){
             c = criaEstrela(estado,pegaEstados(diret,estado,transa, coord),nome,i_f_d,transa,trans, finais, lambidas, quant_finais);
         }
-        if(op == 1 || op == 2){
+        if(op == 2 || op == 3){
             criaAutomoto(nome_arquivo ,nome ,trans ,textos ,c , transa, lambidas, quant_finais, op, coord);
-            if(op == 1)
+            if(op == 2)
                 system("complem.bat");
-            else if(op == 2)
+            else if(op == 3)
                 system("estrel.bat");
             for(int i = 0 ; i < 100; i++){
                 coord[i] = coordenadas();
