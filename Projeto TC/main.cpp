@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstring>
+#include <windows.h>
 
 using namespace std;
 
@@ -296,7 +297,7 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
         if(op == 2){
             arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
             arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
-        } else if(op == 2){
+        } else if(op == 3){
             if(++cont == c){
                 arq << "\n\t\t\t<x>0</x>&#13;";
                 arq << "\n\t\t\t<y>0</y>&#13;";
@@ -343,9 +344,9 @@ void menu(string nome_arquivo){
     cout << "O arquivo .jff precisa estar na pasta deste programa!" << endl;
         
 
-    cout << "1 - Complemento" << endl;
-    cout << "2 - Estrela" << endl;
-    cout << "3 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
+    cout << "1 - Novo automoto(automoto atual: '" << nome_arquivo << "' )" << endl;
+    cout << "2 - Complemento" << endl;
+    cout << "3 - Estrela" << endl;
     cout << "4 - Abrir arquivo" << endl;
     cout << "5 - Fechar programa" << endl;
     cout << "Escolha: ";
@@ -362,7 +363,7 @@ void printTomate(){
     cout<< "   / _ \   | | | |  _____    | |   | | | | | |\/| |   / _ \     | |   |  _|  "<< endl;
     cout<< "  / ___ \  | |_| | |_____|   | |   | |_| | | |  | |  / ___ \    | |   | |___ "<< endl;
     cout<< " /_/   \_\  \___/            |_|    \___/  |_|  |_| /_/   \_\   |_|   |_____|"<< endl; 
-    sleep(1000);
+    Sleep(1000);
     system("cls");                                                                            
 }
 
@@ -421,7 +422,6 @@ int main()
             textos = tags_inicio_e_fim();
             textos_estados = tags_estados();
             quant_finais = 0;
-            //inicial(estado, transa, finais, nome, trans, lambidas, i_f_d, coord);
         }
         if(op > 5 || op < 0)
             cout << "Comando invalido" << endl;
