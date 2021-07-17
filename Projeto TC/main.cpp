@@ -296,8 +296,6 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
         if(op == 1){
             arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
             arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
-            cout << "X: " << coord[i+1].rotax << endl; 
-            cout << "Y: " << coord[i+1].rotay << endl; 
         } else if(op == 2){
             if(++cont == c){
                 arq << "\n\t\t\t<x>0</x>&#13;";
@@ -305,8 +303,6 @@ int criaAutomoto(string nome_automoto,tag_nome_id *nome, tag_nome_id *trans, tag
             }else{
                 arq << "\n\t\t\t<x>"+coord[i+1].rotax+"</x>&#13;";
                 arq << "\n\t\t\t<y>"+coord[i+1].rotay+"</y>&#13;";
-                cout << "X: " << coord[i+1].rotax << endl; 
-                cout << "Y: " << coord[i+1].rotay << endl; 
             }
         }
         if(nome[i].cond != "\t\t</state>&#13;")
